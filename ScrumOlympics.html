@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scrum Olympics</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  height: 100vh;
+  background: url('Cat.jpg.png') center/cover no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Corner text */
+.corner-text {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  font-size: 26px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 2px 2px 6px black;
+}
+
+.container {
+  background: rgba(255,255,255,0.9);
+  padding: 25px;
+  border-radius: 15px;
+  width: 350px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+h1 {
+  margin-bottom: 10px;
+}
+
+.team {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+  padding: 10px;
+  background: #f3f3f3;
+  border-radius: 10px;
+}
+
+button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.add {
+  background: #4CAF50;
+  color: white;
+}
+
+.remove {
+  background: #f44336;
+  color: white;
+}
+
+.reset {
+  margin-top: 15px;
+  background: black;
+  color: white;
+  width: 100%;
+}
+
+/* error message */
+#errorMsg {
+  color: red;
+  margin-top: 10px;
+  display: none;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="corner-text">Definitely not rigged</div>
+
+<div class="container">
+  <h1>Scrum Olympics</h1>
+  <p>Leaderboard</p>
+
+  <div id="teams"></div>
+
+  <button class="reset" onclick="resetScores()">Reset Scores</button>
+  <div id="errorMsg">Sorry, we can not edit Vilho's teams points</div>
+</div>
+
+<script>
+let teams = [
+  {name: "Team Vilho", score: 1000029},
+  {name: "Team Ranon", score: 0}
+];
+
+function render() {
+  let container = document.getElementById("teams");
+  container.innerHTML = "";
+
+  teams.sort((a,b) => b.score - a.score);
+
+  teams.forEach((team, index) => {
+    container.innerHTML += `
+      <div class="team">
+        <div>
+          <strong>${index+1}. ${team.name}</strong><br>
+          ${team.score} pts
+        </div>
+        <div>
+          <button class="add" onclick="addPoint(${index})">+1</button>
+          <button class="remove" onclick="removePoint(${index})">-1</button>
+        </div>
+      </div>
+    `;
+  });
+}
+
+function addPoint(i) {
+  teams[i].score++;
+  render();
+}
+
+function removePoint(i) {
+  if (teams[i].score > 0) {
+    teams[i].score--;
+    render();
+  }
+}
+
+function resetScores() {
+  // Only reset Team Ranon
+  teams.forEach(team => {
+    if (team.name === "Team Ranon") {
+      team.score = 0;
+    }
+  });
+
+  // Show error message
+  let msg = document.getElementById("errorMsg");
+  msg.style.display = "block";
+
+  setTimeout(() => {
+    msg.style.display = "none";
+  }, 2000);
+
+  render();
+}
+
+render();
+</script>
+
+</body>
+</html>
